@@ -1,0 +1,54 @@
+#!/usr/bin/env python3.8
+
+"""
+mkpy: utility to create python3 src code templates
+"""
+
+import os
+import argparse
+import configparser
+from typing import Tuple
+
+INI_FILE = 'mkpy.ini'
+
+
+def parse_ini() -> Tuple[str, str, str]:
+    config = configparser.ConfigParser()
+    config.read(INI_FILE)
+    return (config['CONFIG']['shebang'],
+            config['CONFIG']['python_version'],
+            config['CONFIG']['author'])
+
+
+def parse_cli_args() -> Tuple[str, bool, bool]:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('file_name', type=str, help='output file')
+    parser.add_argument('-f', '--force', action='store_true',
+                        help='overwrite existing file')
+    parser.add_argument('--no_cli', action='store_true',
+                        help='don\'t include #!/usr/bin/env python3.8')
+    args = parser.parse_args()
+    return args.file_name, args.force, args.no_cli
+
+
+def main():
+    shebang, python_version, author = parse_ini()
+    file_name, force, no_cli = parse_cli_args()
+
+    if os.path.isfile(file_name) and not force:
+        exit('file exists: -f to force')
+
+    with open(file_name, 'w') as f:
+        if not no_cli:
+            f.write(f'{shebang} {python_version}\n\n')
+        f.write(f'"""\n{file_name} - \n"""\n\n')
+        if author != '':
+            f.write(f'__author__ = "{author}"\n\n')
+        f.write('#import\n\n\n')
+        f.write('def main():\n    pass\n\n\n')
+        f.write('if __name__ == \'__main__\':\n')
+        f.write('    main()')
+
+
+if __name__ == '__main__':
+    main()
