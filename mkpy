@@ -13,6 +13,9 @@ INI_FILE = 'mkpy.ini'
 
 
 def parse_ini() -> Tuple[str, str, str]:
+    if os.path.isfile(INI_FILE) == False:
+        exit('mkpy line 12: add absolute path')
+        
     config = configparser.ConfigParser()
     config.read(INI_FILE)
     return (config['CONFIG']['shebang'],
