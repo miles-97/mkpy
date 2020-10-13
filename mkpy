@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.8
 
-"""
+'''
 mkpy: utility to create python3 src code templates
-"""
+'''
 
 import os
 import argparse
@@ -41,9 +41,9 @@ def main():
     with open(file_name, 'w') as f:
         if not no_cli:
             f.write(f'{shebang} {python_version}\n\n')
-        f.write(f'"""\n{file_name} - \n"""\n\n')
+        f.write(f'\'\'\'\n{file_name} - \n\'\'\'\n\n')
         if author != '':
-            f.write(f'__author__ = "{author}"\n\n')
+            f.write(f'__author__ = \'{author}\'\n\n')
         f.write('#import\n\n\n')
         f.write('def main():\n    pass\n\n\n')
         f.write('if __name__ == \'__main__\':\n')
